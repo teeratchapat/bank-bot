@@ -9,6 +9,7 @@ const server = require("express");
 const PORT = process.env.PORT || 5001;
 const request = require("request");
 const bodyParser = require("body-parser");
+const lineMessaging = require("./src/classes/line-messaging");
 
 server()
   .use(bodyParser.json())
