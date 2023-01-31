@@ -6,15 +6,14 @@
  * @desc A service for Get/Post data from Firebase Realtime Database.
  */
 const firebase = require("firebase-admin");
-const serviceAccount = require("../../test-line-api-firebase.json");
+const serviceAccount = require("../../chat-bot-firebase.json");
 var db, ref;
 
 class FirebaseService {
   constructor() {
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccount),
-      databaseURL:
-        "https://bank-bot-db-default-rtdb.asia-southeast1.firebasedatabase.app",
+      databaseURL: "https://chat-bot-f5d90-default-rtdb.firebaseio.com/",
     });
 
     db = firebase.database();
