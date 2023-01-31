@@ -17,7 +17,7 @@ server()
     res.send(`Hi there! This is a nodejs-line-api running on PORT: ${PORT}`)
   )
   .post("/webhook", function (req, res) {
-    console.log(req.body);
+    console.log(JSON.stringify(req.body));
     // let replyToken = req.body.events[0].replyToken;
     // let msg = req.body.events[0].message.text;
 
