@@ -16,17 +16,21 @@ server()
   .get("/", (req, res) =>
     res.send(`Hi there! This is a nodejs-line-api running on PORT: ${PORT}`)
   )
+  // console.log(JSON.stringify(req.body));
   .post("/webhook", function (req, res) {
-    // console.log(JSON.stringify(req.body));
     let replyToken = req.body.events[0]?.replyToken;
-    let msg = req.body.events[0]?.message.text;
+    let message = req.body.events[0]?.message.text;
 
     console.log(`Message token : ${replyToken}`);
-    console.log(`Message from chat : ${msg}`);
+    console.log(`Message from chat : ${message}`);
 
-    res.json({
-      status: 200,
-      message: `Webhook is working!`,
+    lineMessaging.replyMessage(replyToken, message).then(function (rs) {
+      console.log(`Reply message result : ${rs}`);
+
+      res.json({
+        status: 200,
+        message: `Sent message!`,
+      });
     });
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
