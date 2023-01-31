@@ -6,7 +6,8 @@
  * @desc A service for reply message via Line Messaging API.
  */
 const request = require("request");
-const apiToken = "token";
+const apiToken =
+  "7oX36hL63bNEK+CVltL+yk+t2gdu/7eGSZOPGwzBFiHz4zd6PUzaZbaV5I0WLSWTyJN8K5BKHY8wy6Net9LU1277lM+ajMSV9v7vWYD3ZPrG0uDENUNtMkMw9Qge+WXhMcB7qLiml3dY+yfIMhZfIAdB04t89/1O/w1cDnyilFU=";
 const apiRoute = "https://api.line.me/v2/bot/message/reply";
 const headers = {
   "Content-Type": "application/json",
