@@ -2,9 +2,7 @@ server()
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }))
   .get("/", (req, res) =>
-    res.send(
-      `Hi there! This is a nodejs-line-api tees running on PORT: ${PORT}`
-    )
+    res.send(`Hi there! This is a nodejs-line-api running on PORT: ${PORT}`)
   )
   // เพิ่มส่วนของ Webhook เข้าไป
   .post("/webhook", function (req, res) {
