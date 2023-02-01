@@ -5,6 +5,8 @@
  * @modify date 2018-06-03 03:45:02
  * @desc A sample project of Node.js and Line API
  */
+require("dotenv").config();
+
 const server = require("express");
 const PORT = process.env.PORT || 5001;
 const request = require("request");
