@@ -16,12 +16,13 @@ const uri =
 
 class LineAPIService {
   reply = async (replyToken, messages) => {
-    MongoClient.connect(uri, { useNewUrlParser: true }, (err, client) => {
-      if (err) return console.log(err);
-      db = client.db("bank_bot"); // database name
-      console.log("db connect success");
-    });
     try {
+      MongoClient.connect(uri, { useNewUrlParser: true }, (err, client) => {
+        if (err) return console.log(err);
+        db = client.db("bank_bot"); // database name
+        console.log("db connect success");
+      });
+
       console.log(messages[0]["text"]);
 
       db.collection("users").save(messages);
