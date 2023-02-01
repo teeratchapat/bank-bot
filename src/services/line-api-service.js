@@ -15,17 +15,20 @@ const uri =
   "mongodb+srv://teeratchapat:Tee1234@cluster0.8sthelg.mongodb.net/test";
 
 class LineAPIService {
+  db;
+
   reply = async (replyToken, messages) => {
     try {
       MongoClient.connect(uri, { useNewUrlParser: true }, (err, client) => {
         if (err) return console.log(err);
-        db = client.db("bank_bot"); // database name
+        this.db = client.db("bank_bot"); // database name
         console.log("db connect success");
       });
 
       console.log(messages[0]["text"]);
+      messages[0]["text"] = "tee";
 
-      db.collection("users").save(messages);
+      this.db.collection("users").save(messages);
 
       const body = stringify({ replyToken, messages });
       const { statusCode } = await request.post({
