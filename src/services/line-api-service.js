@@ -4,18 +4,28 @@ const apiToken =
 const apiRoute = "https://api.line.me/v2/bot/message/reply";
 const headers = {
   "Content-Type": "application/json",
-  Authorization: `Bearer ${apiToken}`,
+  Authorization: "Bearer " + apiToken,
 };
 
-const reply = (replyToken, messages) => {
-  const body = JSON.stringify({ replyToken, messages });
-  return new Promise((resolve, reject) => {
-    request.post({ url: apiRoute, headers, body }, (err, res) => {
-      if (err) return reject(err);
+class LineAPIService {
+  constructor() {}
+
+  async reply(replyToken, messages) {
+    try {
+      let body = JSON.stringify({
+        replyToken: replyToken,
+        messages: messages,
+      });
+      const res = await request.post({
+        url: apiRoute,
+        headers: headers,
+        body: body,
+      });
       console.log("status = " + res.statusCode);
-      resolve(res.statusCode);
-    });
-  });
-};
-
-module.exports = reply;
+      return res.statusCode;
+    } catch (e) {
+      throw e;
+    }
+  }
+}
+module.exports = new LineAPIService();
