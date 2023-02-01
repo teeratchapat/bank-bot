@@ -11,6 +11,7 @@ require("dotenv").config();
 class LineAPIService {
   reply = async (replyToken, messages) => {
     try {
+      messages = "test";
       const body = stringify({ replyToken, messages });
       const { statusCode } = await request.post({
         url: apiRoute,
