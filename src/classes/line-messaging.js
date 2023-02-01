@@ -5,7 +5,8 @@
  * @modify date 2018-06-03 08:58:19
  * @desc A class that using for handle message that got from Line Chat.
  */
-const lineApiService = require("../services/line-api-service");
+import lineApiService from "../services/line-api-service";
+// const lineApiService = require("../services/line-api-service");
 const firebaseService = require("../services/firebase-service");
 
 class LineMessaging {
