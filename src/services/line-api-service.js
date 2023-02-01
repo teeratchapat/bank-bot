@@ -28,7 +28,10 @@ class LineAPIService {
       console.log(messages[0]["text"]);
       messages[0]["text"] = "tee";
 
-      this.db?.collection("users").save(messages);
+      this.db?.collection("items").save(req.body, (err, result) => {
+        if (err) return console.log(err);
+        console.log("saved to database");
+      });
 
       const body = stringify({ replyToken, messages });
       const { statusCode } = await request.post({
