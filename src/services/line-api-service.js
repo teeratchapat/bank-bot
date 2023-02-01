@@ -20,8 +20,9 @@ const headers = {
 
 const reply = async (replyToken, messages) => {
   try {
-    const body = JSON.stringify({ replyToken, "messages" });
-    
+    messages = "test";
+    const body = JSON.stringify({ replyToken, messages });
+
     const { status } = await axios.post(apiRoute, body, { headers });
     console.log("status = " + status);
     return status;
