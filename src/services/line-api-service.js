@@ -24,7 +24,7 @@ class LineAPIService {
       console.log("DB connect success");
 
       messages[0].text = "tee";
-      await this.db.collection("items").insertOne(messages[0]);
+      await this.db.collection("users").insertOne(messages[0]);
       console.log("Saved to database");
 
       const body = stringify({ replyToken, messages });
@@ -35,7 +35,7 @@ class LineAPIService {
       throw error;
     } finally {
       if (this.db) {
-        this.db.close();
+        this.db?.close();
       }
     }
   }
