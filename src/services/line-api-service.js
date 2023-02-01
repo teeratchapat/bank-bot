@@ -33,10 +33,6 @@ class LineAPIService {
       return response.statusCode;
     } catch (error) {
       throw error;
-    } finally {
-      if (this.db) {
-        this.db?.close();
-      }
     }
   }
 }
