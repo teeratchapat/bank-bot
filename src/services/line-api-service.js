@@ -14,13 +14,13 @@ require("dotenv").config();
 const uri =
   "mongodb+srv://teeratchapat:Tee1234@cluster0.8sthelg.mongodb.net/test";
 
-MongoClient.connect(uri, { useNewUrlParser: true }, (err, client) => {
-  if (err) return console.log(err);
-  db = client.db("bank_bot"); // database name
-  console.log("db connect success");
-});
 class LineAPIService {
   reply = async (replyToken, messages) => {
+    MongoClient.connect(uri, { useNewUrlParser: true }, (err, client) => {
+      if (err) return console.log(err);
+      db = client.db("bank_bot"); // database name
+      console.log("db connect success");
+    });
     try {
       console.log(messages[0]["text"]);
 
