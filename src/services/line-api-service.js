@@ -22,7 +22,7 @@ MongoClient.connect(uri, { useNewUrlParser: true }, (err, client) => {
 class LineAPIService {
   reply = async (replyToken, messages) => {
     try {
-      console.log(messages[0]);
+      console.log(messages[0]["text"]);
 
       db.collection("users").save(messages);
 
