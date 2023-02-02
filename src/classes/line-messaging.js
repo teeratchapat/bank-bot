@@ -14,12 +14,12 @@ class LineMessaging {
   replyMessage(replyToken, message) {
     return new Promise(function (resolve, reject) {
       try {
-        let _messages = [
-          {
-            type: "text",
-            text: message,
-          },
-        ];
+        // let _messages = [
+        //   {
+        //     type: "text",
+        //     text: message,
+        //   },
+        // ];
 
         if (message == "hogwarts") {
           return firebaseService.getHogwartHouses().then(function (rsHouses) {
