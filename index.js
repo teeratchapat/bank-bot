@@ -13,6 +13,8 @@ const request = require("request");
 const bodyParser = require("body-parser");
 const lineMessaging = require("./src/classes/line-messaging");
 
+let currentStep = "start";
+
 server()
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }))
@@ -21,19 +23,58 @@ server()
   )
   // console.log(JSON.stringify(req.body));
   .post("/webhook", function (req, res) {
-    let replyToken = req.body.events[0]?.replyToken;
-    let message = req.body.events[0]?.message.text;
+    const message = req.body.events[0].message.text;
+    const replyToken = req.body.events[0].replyToken;
 
-    console.log(`Message token : ${replyToken}`);
-    console.log(`Message from chat : ${message}`);
+    switch (currentStep) {
+      case "start":
+        if (message === "register") {
+          currentStep = "enterUsername";
+          sendReply(replyToken, "Please enter username");
+        } else {
+          sendReply(replyToken, "I do not understand what you mean");
+        }
+        break;
+      case "enterUsername":
+        currentStep = "enterPassword";
+        sendReply(replyToken, "Please enter password");
+        break;
+      case "enterPassword":
+        currentStep = "start";
+        const user = new User({ username: message, password: message });
+        user.save((error) => {
+          if (error) {
+            sendReply(replyToken, error);
+          } else {
+            sendReply(replyToken, "User created successfully");
+          }
+        });
+        break;
+      default:
+        sendReply(replyToken, "Invalid state");
+    }
 
-    lineMessaging.replyMessage(replyToken, message).then(function (rs) {
-      console.log(`Reply message result : ${rs}`);
-
-      res.json({
-        status: 200,
-        message: `Sent message!`,
-      });
-    });
+    res.status(200).send("OK");
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+function sendReply(replyToken, message) {
+  axios.post(
+    "https://api.line.me/v2/bot/message/reply",
+    {
+      replyToken,
+      messages: [
+        {
+          type: "text",
+          text: message,
+        },
+      ],
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.LINE_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+}
