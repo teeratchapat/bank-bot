@@ -5,13 +5,25 @@
  * @modify date 2018-06-03 03:45:02
  * @desc A sample project of Node.js and Line API
  */
-require("dotenv").config();
-
 const server = require("express");
 const PORT = process.env.PORT || 5001;
 const request = require("request");
 const bodyParser = require("body-parser");
 const lineMessaging = require("./src/classes/line-messaging");
+
+require("dotenv").config();
+
+mongoose.connect(
+  "mongodb+srv://teeratchapat:Tee1234@cluster0.8sthelg.mongodb.net/test",
+  { useNewUrlParser: true }
+);
+
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+});
+
+const User = mongoose.model("User", userSchema);
 
 let currentStep = "start";
 
