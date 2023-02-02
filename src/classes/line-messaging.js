@@ -16,7 +16,7 @@ class LineMessaging {
       try {
         let _messages = [
           {
-            name: "text",
+            type: "text",
             text: message,
           },
         ];
