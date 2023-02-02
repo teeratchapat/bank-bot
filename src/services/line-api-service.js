@@ -27,8 +27,8 @@ class LineAPIService {
       await this.db.collection("users").insertOne(messages[0]);
       console.log("Saved to database");
 
-      let messageReturn = await this.db.collection("users").find({});
-      console.log(messageReturn);
+      // let messageReturn = await this.db.collection("users").find({});
+      // console.log(messageReturn);
       const body = stringify({ replyToken, messages });
       const response = await request.post({ url: apiRoute, headers, body });
       console.log(`status = ${response.statusCode}`);
