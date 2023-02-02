@@ -14,6 +14,13 @@ class LineMessaging {
   replyMessage(replyToken, message) {
     return new Promise(function (resolve, reject) {
       try {
+        let _messages = [
+          {
+            name: "text",
+            text: message,
+          },
+        ];
+
         if (message == "hogwarts") {
           return firebaseService.getHogwartHouses().then(function (rsHouses) {
             _messages[0].text = rsHouses;
