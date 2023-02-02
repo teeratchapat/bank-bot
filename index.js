@@ -23,8 +23,8 @@ server()
   )
   // console.log(JSON.stringify(req.body));
   .post("/webhook", function (req, res) {
-    const message = req.body.events[0].message.text;
-    const replyToken = req.body.events[0].replyToken;
+    const message = req.body.events[0]?.message.text;
+    const replyToken = req.body.events[0]?.replyToken;
 
     switch (currentStep) {
       case "start":
