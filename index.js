@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   total: { type: Number, required: true },
 });
 
-const trasactionSchema = new mongoose.Schema({
+const transactionSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   user_id: { type: String, required: true },
   amount: { type: Number, required: true },
@@ -31,10 +31,30 @@ const trasactionSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("users", userSchema);
-const Trasaction = mongoose.model("trasactions", trasactionSchema);
+const Transaction = mongoose.model("transactions", transactionSchema);
 
-// let userTest[userId].currentStep = "start";
 let userTest = {};
+
+// function sendReply(replyToken, message) {
+//   axios.post(
+//     "https://api.line.me/v2/bot/message/reply",
+//     {
+//       replyToken,
+//       messages: [
+//         {
+//           type: "text",
+//           text: message,
+//         },
+//       ],
+//     },
+//     {
+//       headers: {
+//         Authorization: `Bearer ${process.env.LINE_API_TOKEN}`,
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
+// }
 
 function sendReply(replyToken, message) {
   axios.post(
@@ -118,7 +138,7 @@ server()
   .get("/", (req, res) =>
     res.send(`Hi there! This is a nodejs-line-api running on PORT: ${PORT}`)
   )
-  .post("/webhook", function (req, res) {
+  .post("/webhook", async function (req, res) {
     res.json({
       status: 200,
       message: `Sent message!`,
@@ -130,7 +150,7 @@ server()
 
     console.log(`Message token : ${replyToken}`);
     console.log(`Message from chat : ${message}`);
-    console.log(`userId: ${userId}`);
+    // console.log(`userId: ${userId}`);
 
     if (!userTest[userId]) {
       userTest[userId] = { currentStep: "start" };
@@ -138,28 +158,42 @@ server()
 
     switch (userTest[userId].currentStep) {
       case "start":
-        if (message === "feat") {
+        if (message === "ฝากเงิน") {
           userTest[userId].currentStep = "deposit";
           sendReply(replyToken, "จำนวนเท่าไหร่");
         } else if (message === "ถอนเงิน") {
           userTest[userId].currentStep = "withdraw";
           sendQuickReply(replyToken, "จำนวนเท่าไหร่");
         } else if (message === "ดูยอดเงิน") {
-          userTest[userId].currentStep = "withdraw";
-          sendQuickReply(replyToken, "จำนวนเท่าไหร่");
+          // userTest[userId].currentStep = "balance";
+          userTest[userId].currentStep = "start";
+          let query = await Transaction.find({
+            user_id: userId,
+          }).exec();
+          let sum = 0;
+          await query.map((item) => {
+            sum = item.amount + sum;
+          });
+          // console.log("sum", sum);
+          sendReply(replyToken, sum);
         } else {
           sendReply(replyToken, "ฉันไม่เข้าใจที่คุณจะสื่อ");
         }
         break;
       case "deposit":
         userTest[userId].currentStep = "start";
-        const trasactionDeposit = new Trasaction({
+        const transactionDeposit = new Transaction({
           date: new Date(),
           user_id: userId,
           amount: message,
           type: "deposit",
         });
-        trasactionDeposit.save((error) => {
+
+        // let query = await Transaction.find({
+        //   user_id: "Udcfd7979afa631add139f71eff8cd068",
+        // }).exec();
+
+        transactionDeposit.save((error) => {
           if (error) {
             sendReply(replyToken, error.message);
           } else {
@@ -169,19 +203,32 @@ server()
         break;
       case "withdraw":
         userTest[userId].currentStep = "start";
-        const trasactionWithdraw = new Trasaction({
+        const trasactionWithdraw = new Transaction({
           date: new Date(),
           user_id: userId,
-          amount: message,
-          type: "income",
+          amount: message * -1,
+          type: "withdraw",
         });
         trasactionWithdraw.save((error) => {
           if (error) {
             sendQuickReply(replyToken, error.message);
           } else {
-            sendQuickReply(replyToken, "ฝากเงินสำเร็จ");
+            sendReply(replyToken, "ถอนเงินสำเร็จ");
           }
         });
+        break;
+      case "balance":
+        // userTest[userId].currentStep = "start";
+        // let query = await Transaction.find({
+        //   user_id: userId,
+        // }).exec();
+        // let sum = 0;
+        // let result = await query.map((item) => {
+        //   sum = item.amount + sum;
+        // });
+        // console.log("sum", sum);
+        // console.log("result", result);
+        // sendReply(replyToken, "ดู");
         break;
 
       default:
