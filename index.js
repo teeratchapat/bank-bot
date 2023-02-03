@@ -35,27 +35,6 @@ const Transaction = mongoose.model("transactions", transactionSchema);
 
 let userTest = {};
 
-// function sendReply(replyToken, message) {
-//   axios.post(
-//     "https://api.line.me/v2/bot/message/reply",
-//     {
-//       replyToken,
-//       messages: [
-//         {
-//           type: "text",
-//           text: message,
-//         },
-//       ],
-//     },
-//     {
-//       headers: {
-//         Authorization: `Bearer ${process.env.LINE_API_TOKEN}`,
-//         "Content-Type": "application/json",
-//       },
-//     }
-//   );
-// }
-
 function sendReply(replyToken, message) {
   axios.post(
     "https://api.line.me/v2/bot/message/reply",
@@ -132,6 +111,116 @@ function sendQuickReply(replyToken, message) {
   );
 }
 
+function sendQuickReply(replyToken, message) {
+  axios.post(
+    "https://api.line.me/v2/bot/message/reply",
+    {
+      replyToken,
+      messages: [
+        {
+          type: "text",
+          text: message,
+          quickReply: {
+            items: [
+              {
+                type: "action",
+                imageUrl:
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png",
+                action: {
+                  type: "message",
+                  label: "100",
+                  text: 100,
+                },
+              },
+              {
+                type: "action",
+                imageUrl:
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png",
+                action: {
+                  type: "message",
+                  label: "500",
+                  text: 500,
+                },
+              },
+              {
+                type: "action",
+                imageUrl:
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png",
+                action: {
+                  type: "message",
+                  label: "1000",
+                  text: 1000,
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.LINE_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+}
+
+function sendMessage(replyToken, message) {
+  axios.post(
+    "https://api.line.me/v2/bot/message/reply",
+    {
+      replyToken,
+      messages: [
+        {
+          type: "text",
+          text: message,
+          quickReply: {
+            items: [
+              {
+                type: "action",
+                imageUrl:
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png",
+                action: {
+                  type: "message",
+                  label: "ฝากเงิน",
+                  text: "ฝากเงิน",
+                },
+              },
+              {
+                type: "action",
+                imageUrl:
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png",
+                action: {
+                  type: "message",
+                  label: "ถอนเงิน",
+                  text: "ถอนเงิน",
+                },
+              },
+              {
+                type: "action",
+                imageUrl:
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png",
+                action: {
+                  type: "message",
+                  label: "ดูยอดเงิน",
+                  text: "ดูยอดเงิน",
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.LINE_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+}
+
 server()
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }))
@@ -174,8 +263,9 @@ server()
           await query.map((item) => {
             sum = item.amount + sum;
           });
-          // console.log("sum", sum);
           sendReply(replyToken, sum);
+        } else if (message === "เมนู") {
+          sendMessage(replyToken, "คุณต้องการทำรายการอะไร");
         } else {
           sendReply(replyToken, "ฉันไม่เข้าใจที่คุณจะสื่อ");
         }
@@ -188,10 +278,6 @@ server()
           amount: message,
           type: "deposit",
         });
-
-        // let query = await Transaction.find({
-        //   user_id: "Udcfd7979afa631add139f71eff8cd068",
-        // }).exec();
 
         transactionDeposit.save((error) => {
           if (error) {
@@ -216,19 +302,6 @@ server()
             sendReply(replyToken, "ถอนเงินสำเร็จ");
           }
         });
-        break;
-      case "balance":
-        // userTest[userId].currentStep = "start";
-        // let query = await Transaction.find({
-        //   user_id: userId,
-        // }).exec();
-        // let sum = 0;
-        // let result = await query.map((item) => {
-        //   sum = item.amount + sum;
-        // });
-        // console.log("sum", sum);
-        // console.log("result", result);
-        // sendReply(replyToken, "ดู");
         break;
 
       default:
